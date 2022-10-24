@@ -47,7 +47,9 @@ public class Peer {
                 } else {
                     System.out.println("Invalid function for peer");
                 }
-            } catch (Exception e) {}
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -144,7 +146,6 @@ public class Peer {
         for (File f : files) filesString += " " + f.getName();
         System.out.println("arquivos da pasta:" + filesString);
     }
-
 
 
     // function to search file in receivedResponses
@@ -259,7 +260,14 @@ public class Peer {
     }
 
     public static void processResponse(Mensagem incomingMessage) throws Exception {
-        writeFileAsBytes(folderPath + "\\" + incomingMessage.filename, incomingMessage.fileContent);
+
+        try {
+            // in case it is Windows
+            writeFileAsBytes(folderPath + "\\" + incomingMessage.filename, incomingMessage.fileContent);
+        } catch (Exception e) {
+            // in case it is MacOS or Linux
+            writeFileAsBytes(folderPath + "/" + incomingMessage.filename, incomingMessage.fileContent);
+        }
 
         // adds the response message to receivedResponses ArrayList
         receivedResponses.add(incomingMessage);
